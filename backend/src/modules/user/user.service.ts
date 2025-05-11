@@ -11,6 +11,15 @@ const register = async (payload: IUser) => {
   return result;
 };
 
+const profile = async (payload: IUser) => {
+  const result = await User.findById(payload._id).select("-password -_id");
+  if (!result) {
+    throw new AppError(404, "User not found");
+  }
+  return result;
+};
+
 export const userService = {
   register,
+  profile,
 };
