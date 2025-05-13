@@ -1,6 +1,7 @@
 import AppError from "../../errors/appError";
 import { IUser } from "./user.interface";
 import User from "./user.model";
+import jwt from "jsonwebtoken";
 
 const register = async (payload: IUser) => {
   const user = await User.findOne({ email: payload.email });
@@ -8,7 +9,11 @@ const register = async (payload: IUser) => {
     throw new AppError(400, "Email already exists");
   }
   const result = await User.create(payload);
-  return result;
+  const { _id, name, email, accountType } = result;
+  const token = jwt.sign({ _id, name, email, accountType }, process.env.JWT_SECRET as string, {
+    expiresIn: "1d",
+  });
+  return { result, token };
 };
 
 const profile = async (payload: IUser) => {

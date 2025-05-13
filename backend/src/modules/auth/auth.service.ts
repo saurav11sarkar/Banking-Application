@@ -18,6 +18,7 @@ const login = async (payload: ILogin) => {
     id: user._id,
     email: user.email,
     name: user.name,
+    accountType: user.accountType,
   };
   const token = jwt.sign(jwtPayloadToken, config.JWT_SECRET as string, {
     expiresIn: "1d",

@@ -10,10 +10,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { login } from "@/services/auth";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import Link from "next/link";
 import React, { useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 const Loginform = () => {
   const form = useForm({
@@ -23,8 +25,19 @@ const Loginform = () => {
     },
   });
 
-  const onSubmit:SubmitHandler<FieldValues> = (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    try {
+      const res = await login(data);
+      // console.log(res);
+      if (res.success) {
+        toast.success(res.message);
+        form.reset();
+      } else {
+        toast.error(res.message);
+      }
+    } catch (error: any) {
+      console.log(error);
+    }
   };
 
   const [showPassword, setShowPassword] = useState(false);

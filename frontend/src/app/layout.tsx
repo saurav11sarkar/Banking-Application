@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import MainLayout from "@/layout/MainLayout";
+import { Toaster } from "sonner";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -23,6 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${poppins.className}`} suppressHydrationWarning>
+        <Toaster richColors position="top-right" />
         <MainLayout>{children}</MainLayout>
       </body>
     </html>
