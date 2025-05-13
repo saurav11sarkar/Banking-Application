@@ -13,6 +13,7 @@ export const register = async (data: FieldValues) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
+        cache: "no-store",
       }
     );
     const result = await res.json();
@@ -31,6 +32,7 @@ export const login = async (data: FieldValues) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
+      cache: "no-store",
     });
     const result = await res.json();
     // console.log(result)
@@ -68,7 +70,7 @@ export const profile = async () => {
       }
     );
     const result = await res.json();
-    console.log(result);
+    // console.log(result);
     return result;
   } catch (error: any) {
     return Error(error);

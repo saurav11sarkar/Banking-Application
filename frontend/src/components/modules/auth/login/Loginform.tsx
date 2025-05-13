@@ -16,8 +16,11 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { useUser } from "@/contexts/UserContexts";
 
 const Loginform = () => {
+  const router = useRouter();
   const form = useForm({
     defaultValues: {
       email: "",
@@ -25,13 +28,17 @@ const Loginform = () => {
     },
   });
 
+  const { setIsLoading } = useUser();
+
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     try {
+      setIsLoading(true);
       const res = await login(data);
-      // console.log(res);
       if (res.success) {
         toast.success(res.message);
-        form.reset();
+        router.push("/");
+        router.refresh();
+        setIsLoading(false);
       } else {
         toast.error(res.message);
       }

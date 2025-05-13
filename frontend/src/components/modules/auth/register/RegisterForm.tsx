@@ -29,6 +29,8 @@ import { register } from "@/services/auth";
 import { toast } from "sonner";
 import Image from "next/image";
 
+import { useRouter } from "next/navigation";
+
 const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
   email: z.string().email("Invalid email"),
@@ -50,6 +52,7 @@ const RegisterForm = () => {
   });
 
   const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     try {
@@ -57,6 +60,8 @@ const RegisterForm = () => {
       if (res.success) {
         toast.success(res.message);
         form.reset();
+        router.push("/login");
+        router.refresh();
       } else {
         toast.error(res.message);
       }
@@ -174,10 +179,7 @@ const RegisterForm = () => {
                 )}
               />
 
-              <Button
-                type="submit"
-                className="w-full  text-white "
-              >
+              <Button type="submit" className="w-full  text-white ">
                 {form.formState.isSubmitting ? (
                   <Loader2 className="animate-spin h-5 w-5" />
                 ) : (

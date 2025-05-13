@@ -6,7 +6,7 @@ import React from "react";
 
 const HomePage = () => {
   const { user } = useUser();
-  console.log(user);
+
   return (
     <div>
       <h2>Home Page</h2>

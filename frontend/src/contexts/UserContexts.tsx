@@ -1,6 +1,7 @@
 "use client";
 import Loader from "@/components/reuseable/Loader";
-import { getCurrentUser, profile } from "@/services/auth";
+import { profile } from "@/services/auth";
+
 import { IUser } from "@/types";
 import {
   createContext,
@@ -25,14 +26,9 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   useEffect(() => {
     const getUser = async () => {
-      try {
-        const result = await profile();
-        setUser(result.data);
-        setIsLoading(false);
-      } catch (error) {
-        setUser(null);
-        setIsLoading(false);
-      }
+      const result = await profile();
+      setUser(result.data);
+      setIsLoading(false);
     };
     getUser();
   }, [isLoading]);
