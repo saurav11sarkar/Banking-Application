@@ -4,10 +4,10 @@ import React from "react";
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <Provider>
+    <div>
       <Navbar />
       {children}
-    </Provider>
+    </div>
   );
 };
 

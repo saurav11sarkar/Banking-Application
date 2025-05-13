@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
-import MainLayout from "@/layout/MainLayout";
+// import MainLayout from "@/layout/MainLayout";
 import { Toaster } from "sonner";
+import Provider from "@/provider/Provider";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -22,11 +23,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${poppins.className}`} suppressHydrationWarning>
-        <Toaster richColors position="top-right" />
-        <MainLayout>{children}</MainLayout>
-      </body>
-    </html>
+    <Provider>
+      <html lang="en" suppressHydrationWarning>
+        <body className={`${poppins.className}`} suppressHydrationWarning>
+          <Toaster richColors position="top-center" />
+          <main>{children}</main>
+        </body>
+      </html>
+    </Provider>
   );
 }

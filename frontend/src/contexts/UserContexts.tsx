@@ -1,4 +1,5 @@
 "use client";
+
 import Loader from "@/components/reuseable/Loader";
 import { profile } from "@/services/auth";
 
@@ -32,9 +33,8 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
     };
     getUser();
   }, [isLoading]);
-  if (isLoading) {
-    return <Loader />;
-  }
+
+
   return (
     <UserContext.Provider value={{ user, setUser, isLoading, setIsLoading }}>
       {children}
