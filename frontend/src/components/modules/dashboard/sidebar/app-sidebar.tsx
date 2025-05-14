@@ -1,19 +1,7 @@
 "use client";
 
 import * as React from "react";
-import {
-  AudioWaveform,
-  BookOpen,
-  Bot,
-  Command,
-  Frame,
-  GalleryVerticalEnd,
-  Map,
-  PieChart,
-  Settings2,
-  SquareTerminal,
-} from "lucide-react";
-
+import { Banknote, Bot, Settings2, SquareTerminal } from "lucide-react";
 
 // import { NavProjects } from "@/components/modules/dashboard/nav-projects"
 
@@ -29,45 +17,38 @@ import { TeamSwitcher } from "./team-switcher";
 import { NavUser } from "./nav-user";
 import { NavMain } from "./nav-main";
 
-
 // This is sample data.
 const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "/user/dashboard",
+      url: "/dashboard",
       icon: SquareTerminal,
       isActive: true,
     },
     {
-      title: "Shop",
-      url: "/user/shop/all-products",
-      icon: Bot,
+      title: "Services",
+      url: "/amount",
+      icon: Banknote,
       items: [
         {
-          title: "Manage Products",
-          url: "/user/shop/product",
+          title: "Amount",
+          url: "/amount",
         },
         {
-          title: "Manage Categories",
-          url: "/user/shop/categorie",
+          title: "Fixed Deposit",
+          url: "/fixed-deposit",
         },
         {
-          title: "Manage Brands",
-          url: "/user/shop/brand",
+          title: "ATM Card",
+          url: "/atm-card",
         },
       ],
     },
     {
-      title: "Settings",
-      url: "/user/settings",
+      title: "Profile",
+      url: "/profile",
       icon: Settings2,
-      items: [
-        {
-          title: "Profile",
-          url: "/user/settings/profile",
-        },
-      ],
     },
   ],
 };

@@ -1,6 +1,5 @@
 "use client";
 
-import Loader from "@/components/reuseable/Loader";
 import { profile } from "@/services/auth";
 
 import { IUser } from "@/types";

@@ -8,4 +8,7 @@ export default {
   NODE_ENV: process.env.NODE_ENV,
   ROUNDS: process.env.SALT_ROUNDS,
   JWT_SECRET: process.env.JWT_SECRET,
+  STORE_ID: process.env.STORE_ID,
+  STORE_PASSWD: process.env.STORE_PASSWD,
+  IS_LIVE: process.env.IS_LIVE,
 };

@@ -11,7 +11,6 @@ const HomePage = () => {
     <div>
       <h2>Home Page</h2>
       <Button>Click me {user?.email}</Button>
-      <h2>{user?.name}</h2>
     </div>
   );
 };

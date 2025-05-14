@@ -1,5 +1,5 @@
 
-import { AppSidebar } from "@/components/modules/dashboard/app-sidebar";
+import { AppSidebar } from "@/components/modules/dashboard/sidebar/app-sidebar";
 
 import {
   SidebarInset,
