@@ -1,14 +1,16 @@
 import DashboardCard from "@/components/modules/dashboard/DashboardCard";
+import { getAccount } from "@/services/amount";
 import { IDashboardData } from "@/types";
-import { CircleDollarSign, CreditCard, HandCoins, IdCard } from "lucide-react";
-import React from "react";
+import { CircleDollarSign,  HandCoins, IdCard } from "lucide-react";
 
-const Dashboard = () => {
+const Dashboard = async () => {
+  const response = await getAccount();
+
   const dashboardData: IDashboardData[] = [
     {
       title: "Amount",
       icon: <CircleDollarSign className="w-6 h-6 text-yellow-500" />,
-      value: 45,
+      value: response.data?.total_balance || 0,
       link: "/amount",
     },
     {

@@ -3,6 +3,7 @@ import Link from "next/link";
 import React from "react";
 
 const DashboardCard = ({ data }: { data: IDashboardData }) => {
+  
   return (
     <Link href={data.link}>
       <div className="flex items-center justify-between p-6 rounded-xl shadow hover:shadow-lg transition duration-300 border border-gray-200 bg-white">

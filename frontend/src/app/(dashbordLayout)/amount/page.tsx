@@ -2,11 +2,12 @@
 
 import AddAmount from "@/components/modules/dashboard/services/AddAmount";
 import { Badge } from "@/components/ui/badge";
-import { useForm, FormProvider } from "react-hook-form";
+import { getAccount } from "@/services/amount";
+
 import React from "react";
 
-const AmountPage = () => {
- 
+const AmountPage = async () => {
+  const response = await getAccount();
 
   return (
  
@@ -21,7 +22,7 @@ const AmountPage = () => {
               <p className="text-sm text-gray-500">
                 Total amount:
                 <Badge variant="outline" className="ml-2 bg-green-500 text-white">
-                  ₹ 1000/-
+                  ₹ {response.data?.total_balance || 0}/-
                 </Badge>
               </p>
             </div>
