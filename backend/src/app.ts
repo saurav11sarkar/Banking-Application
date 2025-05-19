@@ -1,22 +1,22 @@
 import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import { notFoundError } from "./middlewares/404Handling";
+// import { notFoundError } from "./middlewares/404Handling";
 import config from "./config";
 import router from "./routes/routes";
 import morgan from "morgan";
-// import SSLCommerzPayment from "sslcommerz-lts";
-import catchAsync from "./utils/catchAsync";
+import { orderRouter } from "./modules/order/order.routes";
 
 const app = express();
 
 app.use(cors({ origin: ["http://localhost:3000"], credentials: true }));
-app.use(express.json({ limit: "15kb" }));
-app.use(express.urlencoded({ extended: true, limit: "15kb" }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true}));
 app.use(cookieParser());
 app.use(morgan("dev"));
 
 app.use("/api/v1", router);
+// app.use("/api/v1/order", orderRouter);
 
 app.get("/", (req: Request, res: Response) => {
   res
@@ -27,19 +27,12 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 
-const store_id = config.STORE_ID!
-const store_passwd = config.STORE_PASSWD!
-const is_live = config.IS_LIVE!
-
-app.post("/api/v1/order", catchAsync(async(req , res)=>{
-  res.status(200).json({
-    success: true,
-    message: "Order placed successfully",
-    data: req.body
-  })
-}))
-
-app.use(notFoundError);
+app.use((req:Request, res:Response, next:NextFunction) => {
+  res.status(404).json({
+    success: false,
+    message: "Route not found",
+  });
+});
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || "Internal Server Error";

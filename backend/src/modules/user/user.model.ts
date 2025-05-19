@@ -26,10 +26,6 @@ const userSchema = new mongoose.Schema<IUser>(
       enum: ["saving", "current"],
       default: "saving",
     },
-    balance: {
-      type: Number,
-      default: 0,
-    },
   },
   { timestamps: true }
 );

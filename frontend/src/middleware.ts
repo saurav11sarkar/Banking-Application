@@ -16,7 +16,7 @@ const middleware = async (req: NextRequest) => {
 };
 
 export const config = {
-  matcher: ["/dashboard", "/profile", "/amount", "/fixed-deposit", "/atm-card"],
+  matcher: ["/dashboard", "/profile", "/amount", "/fixed-deposit", "/atm-card", "/success/:tran_id", "/fail/:tran_id"],
 };
 
 export default middleware;

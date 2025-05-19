@@ -1,0 +1,28 @@
+import mongoose from "mongoose";
+import AppError from "../../errors/appError";
+
+import Account from "./account.model";
+import User from "../user/user.model";
+
+const getAccount = async (userId: string) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+  try {
+    const account = await Account.findOne({ userId: userId }).session(session);
+    console.log("account", account);
+    if (!account) {
+      throw new AppError(404, "Account not found");
+    }
+    await session.commitTransaction();
+    session.endSession();
+    return account;
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+    throw error;
+  }
+};
+
+export const AccountService = {
+  getAccount,
+};

@@ -13,22 +13,29 @@ import { Input } from "@/components/ui/input";
 import { addAmount } from "@/services/amount";
 import { CircleDollarSign, Loader2, Plus } from "lucide-react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 const AddAmount = () => {
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isValid, isDirty,isSubmitting },
-  } = useForm();
+    formState: { errors, isValid, isDirty, isSubmitting },
+  } = useForm({ mode: "onChange" });
 
-  const onSubmit:SubmitHandler<FieldValues> = async(data) => {
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     try {
-      const res = await addAmount(data.amount);
-      console.log(res);
-      reset();
-    } catch (error:any) {
+      const res = await addAmount(data); // convert to number
+      if (res?.success) {
+        // toast.success(res.message);
+        window.location.href = res.data.url;
+        // reset();
+      } else {
+        toast.error(res.message || "Failed to process payment.");
+      }
+    } catch (error: any) {
       console.log(error);
+      toast.error("Something went wrong!");
     }
   };
 
@@ -76,7 +83,11 @@ const AddAmount = () => {
             type="submit"
             className="shrink-0"
           >
-            {isSubmitting ? <Loader2 className="animate-spin h-5 w-5" /> : "Add"}
+            {isSubmitting ? (
+              <Loader2 className="animate-spin h-5 w-5" />
+            ) : (
+              "Add"
+            )}
           </Button>
         </form>
 
