@@ -7,6 +7,12 @@ const getAccount = catchAsync(async (req, res) => {
   sendResponse(res, 200, "Account fetched successfully", account);
 });
 
+const allOrdersTransaction = catchAsync(async (req, res) => {
+  const orders = await AccountService.allOrdersTransaction(req.user?._id);
+  sendResponse(res, 200, "Orders fetched successfully", orders);
+});
+
 export const AccountController = {
   getAccount,
+  allOrdersTransaction,
 };

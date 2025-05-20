@@ -36,6 +36,10 @@ const data = {
           url: "/amount",
         },
         {
+          title: "Transaction",
+          url: "/transaction",
+        },
+        {
           title: "Fixed Deposit",
           url: "/fixed-deposit",
         },

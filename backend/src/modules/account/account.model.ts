@@ -7,7 +7,7 @@ const accountSchema = new Schema<IAccount>({
   account_status: { type: String, required: true },
   all_transaction_id: [String],
   total_balance: { type: Number, required: true },
-});
+}, { timestamps: true });
 
 const Account = model<IAccount>("Account", accountSchema);
 export default Account;

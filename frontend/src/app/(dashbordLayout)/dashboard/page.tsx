@@ -1,4 +1,5 @@
 import DashboardCard from "@/components/modules/dashboard/DashboardCard";
+import UserName from "@/components/reuseable/UserName";
 import { getAccount } from "@/services/amount";
 import { IDashboardData } from "@/types";
 import { CircleDollarSign,  HandCoins, IdCard } from "lucide-react";
@@ -30,9 +31,7 @@ const Dashboard = async () => {
   return (
     <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-10">
-          Welcome, <span className="text-red-600">Saurav Sarkar</span>
-        </h1>
+        <UserName />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {dashboardData.map((currentData, index) => (
             <DashboardCard key={index} data={currentData} />
