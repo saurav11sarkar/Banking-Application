@@ -62,3 +62,42 @@ export const allOrdersTransaction = async () => {
   const response = await res.json();
   return response;
 };
+
+export const getAccountNumber = async () => {
+  const token = (await cookies()).get("token")?.value;
+
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/account/account-number`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      next: {
+        tags: ["account"],
+      },
+    }
+  );
+
+  const response = await res.json();
+  return response;
+};
+
+export const createFixDeposit = async (data: FieldValues) => {
+  const token = (await cookies()).get("token")?.value;
+
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/fix-deposit/create`, {
+    method: "POST",
+    body: JSON.stringify(data),
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  revalidateTag("account");
+
+  const response = await res.json();
+  return response;
+};

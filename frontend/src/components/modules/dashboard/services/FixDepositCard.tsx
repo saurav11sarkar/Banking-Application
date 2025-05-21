@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import React from "react";
 
 const FixDepositCard = () => {
+  
   return (
     <div className="w-full p-6 bg-white rounded-2xl shadow-sm border border-gray-200 hover:shadow-md transition">
       <div className="flex flex-col gap-2">

@@ -12,7 +12,13 @@ const allOrdersTransaction = catchAsync(async (req, res) => {
   sendResponse(res, 200, "Orders fetched successfully", orders);
 });
 
+const getAccountNumber = catchAsync(async (req, res) => {
+  const account = await AccountService.getAccountNumber(req.user?._id);
+  sendResponse(res, 200, "Account number fetched successfully", account);
+});
+
 export const AccountController = {
   getAccount,
   allOrdersTransaction,
+  getAccountNumber,
 };

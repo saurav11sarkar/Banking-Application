@@ -1,5 +1,6 @@
 "use client";
-import React from "react";
+
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -13,7 +14,6 @@ import { Plus } from "lucide-react";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -28,22 +28,65 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { createFixDeposit, getAccountNumber } from "@/services/amount";
+import { toast } from "sonner";
+
+interface IsetAccountNumber {
+  _id: string;
+  total_balance: number;
+}
 
 const AddFixDeposit = () => {
+  const [accountNumber, setAccountNumber] = useState<IsetAccountNumber | null>(
+    null
+  );
+  const [isOpen, setIsOpen] = useState(false);
+
   const form = useForm<FieldValues>({
     defaultValues: {
-      accountNumber: "",
+      account: "",
+      apply_for: "",
       amount: "",
       duration: "",
     },
   });
-  const onSubmit: SubmitHandler<FieldValues> = (data) => {
-    console.log(data);
+
+  const { setValue } = form;
+
+  useEffect(() => {
+    const handleAccountNumber = async () => {
+      try {
+        const response = await getAccountNumber();
+        const accountData: IsetAccountNumber = response.data;
+        setAccountNumber(accountData);
+        setValue("account", accountData._id);
+      } catch (error) {
+        console.error("Failed to get account number", error);
+      }
+    };
+    handleAccountNumber();
+  }, [form.reset, setValue, isOpen]);
+
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    const amount = parseInt(data.amount);
+    const duration = parseInt(data.duration);
+    const res = await createFixDeposit({ ...data, amount, duration });
+
+    if (res.success) {
+      toast.success(res.message);
+      form.reset();
+      setAccountNumber(null);
+      setIsOpen(!isOpen)
+    } else {
+      toast.error(res.message);
+    }
   };
+
   return (
     <Dialog>
       <DialogTrigger asChild>
         <Button
+          onClick={() => setIsOpen(!isOpen)}
           variant="outline"
           className="w-full flex items-center justify-center gap-2 text-red-500 border-red-300 border-2 hover:bg-red-50 transition rounded-xl py-3 px-4 font-medium"
         >
@@ -51,33 +94,56 @@ const AddFixDeposit = () => {
           <span className="hidden sm:inline">Add New Fixed Deposit</span>
         </Button>
       </DialogTrigger>
+
       <DialogContent className="max-w-md rounded-xl">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold text-gray-800">
             Add New Fixed Deposit
           </DialogTitle>
           <DialogDescription className="text-sm text-gray-500">
-            Get Per day 0.1% interest by CBI Bank Application.
+            Earn 0.1% daily interest with CBI Bank.
           </DialogDescription>
         </DialogHeader>
 
-        {/* TODO: Replace this with actual form */}
         <div className="mt-4">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
                 control={form.control}
-                name="accountNumber"
+                name="account"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Account Number</FormLabel>
                     <FormControl>
-                      <Input placeholder="shadcn" {...field} />
+                      <Input
+                        {...field}
+                        value={
+                          accountNumber
+                            ? `${accountNumber._id} - ₹${accountNumber.total_balance}/-`
+                            : ""
+                        }
+                        disabled
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+
+              <FormField
+                control={form.control}
+                name="apply_for"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Apply Purpose</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="Enter purpose" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               <FormField
                 control={form.control}
                 name="amount"
@@ -85,12 +151,17 @@ const AddFixDeposit = () => {
                   <FormItem>
                     <FormLabel>Amount</FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder="amount" {...field} />
+                      <Input
+                        type="number"
+                        {...field}
+                        placeholder="Enter amount"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name="duration"
@@ -100,20 +171,24 @@ const AddFixDeposit = () => {
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select a fruit" />
+                          <SelectValue placeholder="Select duration" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="1">1</SelectItem>
-                        <SelectItem value="2">2</SelectItem>
-                        <SelectItem value="3">3</SelectItem>
+                        <SelectItem value="12">1 Year</SelectItem>
+                        <SelectItem value="24">2 Years</SelectItem>
+                        <SelectItem value="36">3 Years</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full text-white my-4">
+
+              <Button
+                type="submit"
+                className="w-full bg-red-700 hover:bg-red-800 text-white my-4"
+              >
                 Add Fixed Deposit
               </Button>
             </form>

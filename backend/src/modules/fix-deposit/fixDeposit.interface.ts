@@ -6,8 +6,11 @@ export interface IFixDeposit extends Document {
   apply_for: string;
   amount: number;
   isClaimed: boolean;
-  date: Date;
+  date?: Date;
   interest_amount: number;
-  claimed_date: Date;
+  claimed_date?: Date;
   total_amount: number;
+  duration: number;
+  createdAt?: Date;
+  updatedAt?: Date;
 }

@@ -26,13 +26,13 @@ const fixDepositSchema = new mongoose.Schema<IFixDeposit>(
       type: Boolean,
       default: false,
     },
-    date: {
-      type: Date,
-      default: Date.now,
-    },
     interest_amount: {
       type: Number,
       default: 0,
+    },
+    duration: {
+      type: Number,
+      required: true,
     },
     claimed_date: {
       type: Date,
