@@ -43,7 +43,6 @@ const AddAmount = () => {
     <Dialog>
       <DialogTrigger asChild>
         <Button
-          //   variant="ghost"
           className="gap-2 "
         >
           <Plus className="w-4 h-4" />

@@ -28,7 +28,7 @@ const allOrdersTransaction = async (userId: string) => {
   const session = await mongoose.startSession();
   session.startTransaction();
   try {
-    const orders = await Order.find({ userId: userId }).populate("userId").session(session);
+    const orders = await Order.find({ userId: userId }).populate("userId").sort({ createdAt: -1 }).session(session);
     await session.commitTransaction();
     session.endSession(); 
     return orders;
