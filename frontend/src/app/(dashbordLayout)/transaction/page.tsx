@@ -72,7 +72,7 @@ const TransactionPage = () => {
     const fetchData = async () => {
       try {
         const response = await allOrdersTransaction();
-        const transformed: Payment[] = response.data.map((order: any) => ({
+        const transformed: Payment[] = response?.data?.orders.map((order: any) => ({
           id: order._id,
           email: order.userId.email,
           transaction_id: order.tranjectionId,
@@ -86,7 +86,24 @@ const TransactionPage = () => {
             hour12: true,
           }),
         }));
-        setData(transformed);
+        const fixDeposits = response?.data?.fixDeposits.map((deposit: any) => ({
+          id: deposit._id,
+          email: deposit.user.email,
+          transaction_id: deposit._id,
+          amount: deposit.amount,
+          date: new Date(deposit.createdAt).toLocaleString("en-GB", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
+          }),
+        }));
+        
+
+        setData([...transformed, ...fixDeposits]);
+        // setData(fixDeposits);
       } catch (error) {
         console.error("Error fetching transactions:", error);
       }

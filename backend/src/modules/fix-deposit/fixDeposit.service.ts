@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
-import { IFixDeposit } from "./fixDeposit.interface";
-import User from "../user/user.model";
 import AppError from "../../errors/appError";
-import Account from "../account/account.model";
-import { Account_LIMIT } from "../../utils/constain";
 import FixDeposit from "./fixDeposit.model";
+import Account from "../account/account.model";
+import User from "../user/user.model";
+import { Account_LIMIT } from "../../utils/constain";
+import { IFixDeposit } from "./fixDeposit.interface";
 
 const createFixDeposit = async (payload: IFixDeposit, userId: string) => {
   const session = await mongoose.startSession();
@@ -21,37 +21,29 @@ const createFixDeposit = async (payload: IFixDeposit, userId: string) => {
       throw new AppError(400, "Insufficient balance");
     }
 
-    if (
-      user.accountType === "current" &&
-      account.total_balance <= Account_LIMIT.current
-    ) {
+    if (user.accountType === "current" && account.total_balance <= Account_LIMIT.current) {
       throw new AppError(400, "Account limit exceeded");
     }
 
-    // Interest logic based on duration
-    const interestRate = payload.duration < 12 ? 2.5 : 5.5;
-    const interest = (payload.amount * interestRate) / 100;
+    const interestRate = payload.amount > 1000 ? 0.5 : payload.amount > 500 ? 0.2 : 0.1;
+    const interest = payload.amount * (interestRate / 100);
     const totalAmount = payload.amount + interest;
 
-    const fixDeposit = await FixDeposit.create(
-      [
-        {
-          ...payload,
-          user: user._id,
-          account: account._id,
-          interest_amount: interest,
-          total_amount: totalAmount,
-        },
-      ],
-      { session }
-    );
+    const [fixDeposit] = await FixDeposit.create([{
+      ...payload,
+      user: user._id,
+      account: account._id,
+      interestRate,
+      interest_amount: interest,
+      total_amount: totalAmount,
+    }], { session });
 
-    // Deduct deposit amount from account
     account.total_balance -= payload.amount;
+    account.all_transaction_id.push(fixDeposit._id as string);
     await account.save({ session });
 
     await session.commitTransaction();
-    return fixDeposit[0];
+    return fixDeposit;
   } catch (error) {
     await session.abortTransaction();
     throw error;
@@ -65,41 +57,39 @@ const claimFixDeposit = async (depositId: string, userId: string) => {
   session.startTransaction();
 
   try {
-    const fixDeposit = await FixDeposit.findOne({
-      _id: depositId,
-      user: userId,
-    }).session(session);
+    const fixDeposit = await FixDeposit.findOne({ _id: depositId, user: userId }).session(session);
     if (!fixDeposit) throw new AppError(404, "Fixed deposit not found");
     if (fixDeposit.isClaimed) throw new AppError(400, "Already claimed");
 
     const account = await Account.findById(fixDeposit.account).session(session);
     if (!account) throw new AppError(404, "Account not found");
 
-    const createdAt = fixDeposit.createdAt!;
     const now = new Date();
-    const diffInMonths =
-      (now.getFullYear() - createdAt.getFullYear()) * 12 +
-      (now.getMonth() - createdAt.getMonth());
+    const createdAt = fixDeposit.createdAt;
+    if (!createdAt) throw new AppError(500, "Missing creation date");
 
-    let amountToAdd = fixDeposit.amount;
-
-    if (diffInMonths >= fixDeposit.duration) {
-      amountToAdd += fixDeposit.interest_amount;
-    }
+    const days = Math.floor((now.getTime() - createdAt.getTime()) / (1000 * 60 * 60 * 24));
+    const dailyRate = fixDeposit.interestRate / 100 / 30;
+    const earnedInterest = fixDeposit.amount * dailyRate * days;
+    const totalAmount = fixDeposit.amount + earnedInterest;
 
     fixDeposit.isClaimed = true;
     fixDeposit.claimed_date = now;
-
+    fixDeposit.interest_amount = earnedInterest;
+    fixDeposit.total_amount = totalAmount;
     await fixDeposit.save({ session });
-    account.total_balance += amountToAdd;
+
+    account.total_balance += totalAmount;
+    account.all_transaction_id.push(fixDeposit._id as string);
     await account.save({ session });
 
     await session.commitTransaction();
     return fixDeposit;
   } catch (error) {
     await session.abortTransaction();
-    session.endSession();
     throw error;
+  } finally {
+    session.endSession();
   }
 };
 
@@ -108,34 +98,27 @@ const getAllFixDeposit = async (userId: string) => {
   session.startTransaction();
 
   try {
-    const fixDeposit = await FixDeposit.find({ user: userId })
-      // .populate("user")
-      // .populate("account")
-      .session(session);
-    const fixDepositData: any = [];
-    if (fixDeposit) {
-      fixDeposit.map((item) => {
-        fixDepositData.push({
-          _id: item._id,
-          amount: item.amount,
-          duration: item.duration,
-          interest_amount: item.interest_amount,
-          total_amount: item.total_amount,
-        });
-      });
-    }
-    const totalAmount = fixDepositData.reduce(
-      (acc: number, curr: any) => acc + curr.total_amount,
-      0
-    );
-    fixDepositData.push({ totalAmount });
+    const fixDeposits = await FixDeposit.find({
+      user: userId,
+      isClaimed: false,
+    }).session(session);
+
+    const fixDepositData = fixDeposits.map(fd => ({
+      _id: fd._id,
+      amount: fd.amount,
+      interest_amount: fd.interest_amount,
+      total_amount: fd.total_amount,
+    }));
+
+    const totalAmount = fixDepositData.reduce((acc, curr) => acc + curr.total_amount, 0);
+
     await session.commitTransaction();
-    session.endSession();
-    return { fixDeposit, fixDepositData, totalAmount };
+    return { fixDeposits, fixDepositData, totalAmount };
   } catch (error) {
     await session.abortTransaction();
-    session.endSession();
     throw error;
+  } finally {
+    session.endSession();
   }
 };
 

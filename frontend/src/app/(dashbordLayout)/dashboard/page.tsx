@@ -1,23 +1,25 @@
 import DashboardCard from "@/components/modules/dashboard/DashboardCard";
 import UserName from "@/components/reuseable/UserName";
-import { getAccount } from "@/services/amount";
+import { getAccount, getixDeposit } from "@/services/amount";
 import { IDashboardData } from "@/types";
-import { CircleDollarSign,  HandCoins, IdCard } from "lucide-react";
+import { CircleDollarSign, HandCoins, IdCard } from "lucide-react";
 
 const Dashboard = async () => {
   const response = await getAccount();
+  const res = await getixDeposit();
+
 
   const dashboardData: IDashboardData[] = [
     {
       title: "Amount",
       icon: <CircleDollarSign className="w-6 h-6 text-yellow-500" />,
-      value: response.data?.total_balance || 0,
+      value: (response.data?.total_balance)?.toFixed(2) || 0,
       link: "/amount",
     },
     {
       title: "Fixed Deposit",
       icon: <HandCoins className="w-6 h-6 text-rose-500" />,
-      value: 40,
+      value: (res?.data?.totalAmount)?.toFixed(2) || 0,
       link: "/fixed-deposit",
     },
     {

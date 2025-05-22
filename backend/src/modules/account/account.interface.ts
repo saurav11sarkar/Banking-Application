@@ -1,11 +1,9 @@
 import { Types } from "mongoose";
 
-// export type AccountStatus = "saving" | "current";
-
 export interface IAccount {
-  userId: Types.ObjectId;             
-  account_name: string;              
-  account_status: string;     
-  all_transaction_id: string[];     
-  total_balance: number;             
+  userId: Types.ObjectId;
+  account_name: string;
+  account_status: string;
+  all_transaction_id: string[];
+  total_balance: number;
 }

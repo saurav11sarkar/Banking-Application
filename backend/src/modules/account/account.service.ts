@@ -2,8 +2,9 @@ import mongoose from "mongoose";
 import AppError from "../../errors/appError";
 
 import Account from "./account.model";
-import User from "../user/user.model";
+
 import Order from "../order/order.model";
+import FixDeposit from "../fix-deposit/fixDeposit.model";
 
 const getAccount = async (userId: string) => {
   const session = await mongoose.startSession();
@@ -32,9 +33,15 @@ const allOrdersTransaction = async (userId: string) => {
       .populate("userId")
       .sort({ createdAt: -1 })
       .session(session);
+    
+    const fixDeposits = await FixDeposit.find({ user: userId })
+      .populate("user")
+      .sort({ createdAt: -1 })
+      .session(session);
+
     await session.commitTransaction();
     session.endSession();
-    return orders;
+    return { orders, fixDeposits };
   } catch (error) {
     session.abortTransaction();
     session.endSession();

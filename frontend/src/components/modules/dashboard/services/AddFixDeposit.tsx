@@ -47,7 +47,6 @@ const AddFixDeposit = () => {
       account: "",
       apply_for: "",
       amount: "",
-      duration: "",
     },
   });
 
@@ -76,7 +75,7 @@ const AddFixDeposit = () => {
       toast.success(res.message);
       form.reset();
       setAccountNumber(null);
-      setIsOpen(!isOpen)
+      setIsOpen(!isOpen);
     } else {
       toast.error(res.message);
     }
@@ -119,7 +118,7 @@ const AddFixDeposit = () => {
                         {...field}
                         value={
                           accountNumber
-                            ? `${accountNumber._id} - ₹${accountNumber.total_balance}/-`
+                            ? `${accountNumber._id} - ₹${accountNumber.total_balance.toFixed(2)}/-`
                             : ""
                         }
                         disabled
@@ -157,29 +156,6 @@ const AddFixDeposit = () => {
                         placeholder="Enter amount"
                       />
                     </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="duration"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Duration</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <FormControl>
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select duration" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="12">1 Year</SelectItem>
-                        <SelectItem value="24">2 Years</SelectItem>
-                        <SelectItem value="36">3 Years</SelectItem>
-                      </SelectContent>
-                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
