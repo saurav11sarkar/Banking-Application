@@ -19,17 +19,16 @@ import {
 import { allOrdersTransaction } from "@/services/amount";
 import UserName from "@/components/reuseable/UserName";
 
-// Define the Payment type
 export type Payment = {
   id: string;
   date: string;
-  name: string;
+  name?: string;
   email: string;
   transaction_id: string;
   amount: number;
+  source: "order" | "claimed" | "unclaimed";
 };
 
-// Define table columns
 export const columns: ColumnDef<Payment>[] = [
   {
     accessorKey: "date",
@@ -49,7 +48,7 @@ export const columns: ColumnDef<Payment>[] = [
     accessorKey: "transaction_id",
     header: "Transaction ID",
     cell: ({ row }) => (
-      <span className="text-xs font-mono text-blue-600 break-words">
+      <span className="text-xs font-mono text-blue-600 break-all">
         {row.getValue("transaction_id")}
       </span>
     ),
@@ -72,9 +71,10 @@ const TransactionPage = () => {
     const fetchData = async () => {
       try {
         const response = await allOrdersTransaction();
-        const transformed: Payment[] = response?.data?.orders.map((order: any) => ({
+
+        const orders: Payment[] = response?.data?.orders.map((order: any) => ({
           id: order._id,
-          email: order.userId.email,
+          email: order.userId?.email || "N/A",
           transaction_id: order.tranjectionId,
           amount: order.amount,
           date: new Date(order.createdAt).toLocaleString("en-GB", {
@@ -85,25 +85,46 @@ const TransactionPage = () => {
             minute: "2-digit",
             hour12: true,
           }),
+          source: "order",
         }));
-        const fixDeposits = response?.data?.fixDeposits.map((deposit: any) => ({
-          id: deposit._id,
-          email: deposit.user.email,
-          transaction_id: deposit._id,
-          amount: deposit.amount,
-          date: new Date(deposit.createdAt).toLocaleString("en-GB", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: true,
-          }),
-        }));
-        
 
-        setData([...transformed, ...fixDeposits]);
-        // setData(fixDeposits);
+        const claimed: Payment[] = response?.data?.fixDeposits?.claimed.map(
+          (deposit: any) => ({
+            id: deposit._id,
+            email: deposit.user?.email || "N/A",
+            transaction_id: deposit._id,
+            amount: deposit.amount,
+            date: new Date(deposit.createdAt).toLocaleString("en-GB", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: true,
+            }),
+            source: "claimed",
+          })
+        );
+
+        const unclaimed: Payment[] = response?.data?.fixDeposits?.unclaimed.map(
+          (deposit: any) => ({
+            id: deposit._id,
+            email: deposit.user?.email || "N/A",
+            transaction_id: deposit._id,
+            amount: deposit.amount,
+            date: new Date(deposit.createdAt).toLocaleString("en-GB", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: true,
+            }),
+            source: "unclaimed",
+          })
+        );
+
+        setData([...orders, ...claimed, ...unclaimed]);
       } catch (error) {
         console.error("Error fetching transactions:", error);
       }
@@ -118,23 +139,49 @@ const TransactionPage = () => {
     getCoreRowModel: getCoreRowModel(),
   });
 
+  const getRowColor = (source: Payment["source"]) => {
+    switch (source) {
+      case "order":
+        return "bg-red-50";
+      case "claimed":
+        return "bg-yellow-50";
+      case "unclaimed":
+        return "bg-green-50";
+      default:
+        return "";
+    }
+  };
+
+  const getTooltipText = (source: Payment["source"]) => {
+    switch (source) {
+      case "order":
+        return "Order Transaction";
+      case "claimed":
+        return "Claimed Fixed Deposit";
+      case "unclaimed":
+        return "Unclaimed Fixed Deposit";
+      default:
+        return "";
+    }
+  };
+
   return (
     <div className="p-4 sm:p-6 md:p-8 bg-gray-100 min-h-screen">
       <UserName />
-      <div className="bg-white rounded-xl shadow-md border border-gray-200 p-4 sm:p-6 overflow-hidden">
+      <div className="bg-white rounded-xl shadow-md border border-gray-200 p-4 sm:p-6">
         <h2 className="text-xl font-bold text-gray-800 mb-6">
           Transaction History
         </h2>
 
         <div className="w-full overflow-x-auto">
-          <Table className="min-w-[600px] text-sm">
+          <Table className="min-w-[700px] text-sm">
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
                     <TableHead
                       key={header.id}
-                      className="bg-gray-100 text-gray-700 font-medium px-4 py-3 text-left"
+                      className="bg-gray-100 text-gray-700 font-semibold px-4 py-3 text-left"
                     >
                       {header.isPlaceholder
                         ? null
@@ -149,21 +196,32 @@ const TransactionPage = () => {
             </TableHeader>
             <TableBody>
               {table.getRowModel().rows.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    className="hover:bg-gray-50 transition-colors"
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id} className="px-4 py-3">
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
+                table.getRowModel().rows.map((row) => {
+                  const source = row.original.source;
+                  const tooltip = getTooltipText(source);
+                  const bgColor = getRowColor(source);
+
+                  return (
+                    <TableRow
+                      key={row.id}
+                      className={`group transition-all duration-200 hover:bg-opacity-80 ${bgColor}`}
+                    >
+                      {row.getVisibleCells().map((cell, idx) => (
+                        <TableCell key={cell.id} className="px-4 py-3 relative">
+                          {idx === 0 && (
+                            <div className="absolute -top-6 left-0 hidden group-hover:flex items-center bg-black text-white text-xs rounded px-2 py-1 z-10 shadow">
+                              {tooltip}
+                            </div>
+                          )}
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  );
+                })
               ) : (
                 <TableRow>
                   <TableCell

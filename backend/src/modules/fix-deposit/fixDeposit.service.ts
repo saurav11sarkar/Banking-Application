@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 import AppError from "../../errors/appError";
 import FixDeposit from "./fixDeposit.model";
 import Account from "../account/account.model";
@@ -21,25 +21,34 @@ const createFixDeposit = async (payload: IFixDeposit, userId: string) => {
       throw new AppError(400, "Insufficient balance");
     }
 
-    if (user.accountType === "current" && account.total_balance <= Account_LIMIT.current) {
+    if (
+      user.accountType === "current" &&
+      account.total_balance <= Account_LIMIT.current
+    ) {
       throw new AppError(400, "Account limit exceeded");
     }
 
-    const interestRate = payload.amount > 1000 ? 0.5 : payload.amount > 500 ? 0.2 : 0.1;
+    const interestRate =
+      payload.amount > 1000 ? 0.5 : payload.amount > 500 ? 0.2 : 0.1;
     const interest = payload.amount * (interestRate / 100);
     const totalAmount = payload.amount + interest;
 
-    const [fixDeposit] = await FixDeposit.create([{
-      ...payload,
-      user: user._id,
-      account: account._id,
-      interestRate,
-      interest_amount: interest,
-      total_amount: totalAmount,
-    }], { session });
+    const [fixDeposit] = await FixDeposit.create(
+      [
+        {
+          ...payload,
+          user: user._id,
+          account: account._id,
+          interestRate,
+          interest_amount: interest,
+          total_amount: totalAmount,
+        },
+      ],
+      { session }
+    );
 
     account.total_balance -= payload.amount;
-    account.all_transaction_id.push(fixDeposit._id as string);
+    account.all_transaction_id.push(fixDeposit._id as Types.ObjectId);
     await account.save({ session });
 
     await session.commitTransaction();
@@ -57,7 +66,10 @@ const claimFixDeposit = async (depositId: string, userId: string) => {
   session.startTransaction();
 
   try {
-    const fixDeposit = await FixDeposit.findOne({ _id: depositId, user: userId }).session(session);
+    const fixDeposit = await FixDeposit.findOne({
+      _id: depositId,
+      user: userId,
+    }).session(session);
     if (!fixDeposit) throw new AppError(404, "Fixed deposit not found");
     if (fixDeposit.isClaimed) throw new AppError(400, "Already claimed");
 
@@ -68,10 +80,16 @@ const claimFixDeposit = async (depositId: string, userId: string) => {
     const createdAt = fixDeposit.createdAt;
     if (!createdAt) throw new AppError(500, "Missing creation date");
 
-    const days = Math.floor((now.getTime() - createdAt.getTime()) / (1000 * 60 * 60 * 24));
+    const days = Math.floor(
+      (now.getTime() - createdAt.getTime()) / (1000 * 60 * 60 * 24)
+    );
+    // console.log("days", days);
     const dailyRate = fixDeposit.interestRate / 100 / 30;
+    // console.log("dailyRate", dailyRate);
     const earnedInterest = fixDeposit.amount * dailyRate * days;
+    // console.log("earnedInterest", earnedInterest);
     const totalAmount = fixDeposit.amount + earnedInterest;
+    // console.log("totalAmount", totalAmount);
 
     fixDeposit.isClaimed = true;
     fixDeposit.claimed_date = now;
@@ -80,7 +98,10 @@ const claimFixDeposit = async (depositId: string, userId: string) => {
     await fixDeposit.save({ session });
 
     account.total_balance += totalAmount;
-    account.all_transaction_id.push(fixDeposit._id as string);
+    console.log("account.total_balance", account.total_balance);
+    console.log("totalAmount", totalAmount);
+    console.log("account.total_balance += totalAmount", account.total_balance += totalAmount);
+    account.all_transaction_id.push(fixDeposit._id as Types.ObjectId);
     await account.save({ session });
 
     await session.commitTransaction();
@@ -103,14 +124,17 @@ const getAllFixDeposit = async (userId: string) => {
       isClaimed: false,
     }).session(session);
 
-    const fixDepositData = fixDeposits.map(fd => ({
+    const fixDepositData = fixDeposits.map((fd) => ({
       _id: fd._id,
       amount: fd.amount,
       interest_amount: fd.interest_amount,
       total_amount: fd.total_amount,
     }));
 
-    const totalAmount = fixDepositData.reduce((acc, curr) => acc + curr.total_amount, 0);
+    const totalAmount = fixDepositData.reduce(
+      (acc, curr) => acc + curr.total_amount,
+      0
+    );
 
     await session.commitTransaction();
     return { fixDeposits, fixDepositData, totalAmount };

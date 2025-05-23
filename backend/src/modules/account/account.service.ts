@@ -25,29 +25,53 @@ const getAccount = async (userId: string) => {
   }
 };
 
-const allOrdersTransaction = async (userId: string) => {
+
+
+interface IAllTransactionsResponse {
+  orders: any[]; // Replace `any` with specific order interface if defined
+  fixDeposits: {
+    claimed: any[];   // Replace `any` with IFixDeposit if you have the interface
+    unclaimed: any[];
+  };
+}
+
+const allOrdersTransaction = async (
+  userId: string
+): Promise<IAllTransactionsResponse> => {
   const session = await mongoose.startSession();
   session.startTransaction();
+
   try {
-    const orders = await Order.find({ userId: userId })
+    const orders = await Order.find({ userId })
       .populate("userId")
       .sort({ createdAt: -1 })
       .session(session);
-    
-    const fixDeposits = await FixDeposit.find({ user: userId })
+
+    const allFixDeposits = await FixDeposit.find({ user: userId })
       .populate("user")
       .sort({ createdAt: -1 })
       .session(session);
 
+    const claimed = allFixDeposits.filter((fd) => fd.isClaimed);
+    const unclaimed = allFixDeposits.filter((fd) => !fd.isClaimed);
+
     await session.commitTransaction();
     session.endSession();
-    return { orders, fixDeposits };
+
+    return {
+      orders,
+      fixDeposits: {
+        claimed,
+        unclaimed,
+      },
+    };
   } catch (error) {
-    session.abortTransaction();
+    await session.abortTransaction();
     session.endSession();
     throw error;
   }
 };
+
 
 const getAccountNumber = async (userId: string) => {
   const session = await mongoose.startSession();
