@@ -28,9 +28,9 @@ const getAccount = async (userId: string) => {
 
 
 interface IAllTransactionsResponse {
-  orders: any[]; // Replace `any` with specific order interface if defined
+  orders: any[];
   fixDeposits: {
-    claimed: any[];   // Replace `any` with IFixDeposit if you have the interface
+    claimed: any[];
     unclaimed: any[];
   };
 }
