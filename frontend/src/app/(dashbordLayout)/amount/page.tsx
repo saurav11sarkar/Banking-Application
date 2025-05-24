@@ -21,7 +21,7 @@ const AmountPage = async () => {
               <p className="text-sm text-gray-500">
                 Total amount:
                 <Badge variant="outline" className="ml-2 bg-green-500 text-white">
-                  ₹ {response.data?.total_balance || 0}/-
+                  ₹ {(response.data?.total_balance)?.toFixed(2) || 0}/-
                 </Badge>
               </p>
             </div>
