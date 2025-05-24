@@ -73,11 +73,11 @@ const TransactionPage = () => {
         const response = await allOrdersTransaction();
 
         const orders: Payment[] = response?.data?.orders.map((order: any) => ({
-          id: order._id,
+          id: order?._id,
           email: order.userId?.email || "N/A",
-          transaction_id: order.tranjectionId,
-          amount: order.amount,
-          date: new Date(order.createdAt).toLocaleString("en-GB", {
+          transaction_id: order?.tranjectionId,
+          amount: order?.amount,
+          date: new Date(order?.createdAt).toLocaleString("en-GB", {
             day: "2-digit",
             month: "2-digit",
             year: "numeric",
@@ -92,9 +92,9 @@ const TransactionPage = () => {
           (deposit: any) => ({
             id: deposit._id,
             email: deposit.user?.email || "N/A",
-            transaction_id: deposit._id,
-            amount: deposit.amount,
-            date: new Date(deposit.createdAt).toLocaleString("en-GB", {
+            transaction_id: deposit?._id,
+            amount: deposit?.amount,
+            date: new Date(deposit?.createdAt).toLocaleString("en-GB", {
               day: "2-digit",
               month: "2-digit",
               year: "numeric",
@@ -110,9 +110,9 @@ const TransactionPage = () => {
           (deposit: any) => ({
             id: deposit._id,
             email: deposit.user?.email || "N/A",
-            transaction_id: deposit._id,
-            amount: deposit.amount,
-            date: new Date(deposit.createdAt).toLocaleString("en-GB", {
+            transaction_id: deposit?._id,
+            amount: deposit?.amount,
+            date: new Date(deposit?.createdAt).toLocaleString("en-GB", {
               day: "2-digit",
               month: "2-digit",
               year: "numeric",

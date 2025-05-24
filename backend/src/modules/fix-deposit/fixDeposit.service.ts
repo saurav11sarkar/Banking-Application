@@ -98,9 +98,7 @@ const claimFixDeposit = async (depositId: string, userId: string) => {
     await fixDeposit.save({ session });
 
     account.total_balance += totalAmount;
-    console.log("account.total_balance", account.total_balance);
-    console.log("totalAmount", totalAmount);
-    console.log("account.total_balance += totalAmount", account.total_balance += totalAmount);
+
     account.all_transaction_id.push(fixDeposit._id as Types.ObjectId);
     await account.save({ session });
 

@@ -56,9 +56,9 @@ const AddFixDeposit = () => {
     const handleAccountNumber = async () => {
       try {
         const response = await getAccountNumber();
-        const accountData: IsetAccountNumber = response.data;
+        const accountData: IsetAccountNumber = response?.data;
         setAccountNumber(accountData);
-        setValue("account", accountData._id);
+        setValue("account", accountData?._id);
       } catch (error) {
         console.error("Failed to get account number", error);
       }
@@ -67,11 +67,11 @@ const AddFixDeposit = () => {
   }, [form.reset, setValue, isOpen]);
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    const amount = parseInt(data.amount);
-    const duration = parseInt(data.duration);
-    const res = await createFixDeposit({ ...data, amount, duration });
+    const amount = parseInt(data?.amount);
+    // const duration = parseInt(data.duration);
+    const res = await createFixDeposit({ ...data, amount });
 
-    if (res.success) {
+    if (res?.success) {
       toast.success(res.message);
       form.reset();
       setAccountNumber(null);
