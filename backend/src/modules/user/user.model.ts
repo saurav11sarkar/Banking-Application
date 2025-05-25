@@ -26,6 +26,15 @@ const userSchema = new mongoose.Schema<IUser>(
       enum: ["saving", "current"],
       default: "saving",
     },
+    image: {
+      type: String,
+    },
+    phone: {
+      type: String,
+    },
+    address: {
+      type: String,
+    },
   },
   { timestamps: true }
 );

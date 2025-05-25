@@ -1,8 +1,11 @@
+import UserProfileDashboard from '@/components/modules/dashboard/profile/UserProfileDashboard'
 import React from 'react'
 
 const ProfilePage = () => {
   return (
-    <div>ProfilePage</div>
+    <div>
+      <UserProfileDashboard/>
+    </div>
   )
 }
 

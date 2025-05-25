@@ -24,7 +24,11 @@ const DashboardCard = ({ data }: { data: IDashboardData }) => {
           <p className="text-sm text-gray-500">{data.title}</p>
           <div className="flex items-center justify-end mt-1 space-x-2">
             <h2 className="text-2xl font-semibold text-gray-800">
-              {isShow ? `₹${data.value}` : ``.padStart(data.value.toString().length, "*")}
+              {isShow
+                ? `${
+                    data.title === "ATM Card" ? data.value : "₹" + data.value
+                  }`
+                : ``.padStart(data.value.toString().length, "*")}
             </h2>
             <button
               onClick={toggleShow}

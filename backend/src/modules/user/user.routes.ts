@@ -3,6 +3,7 @@ import { userController } from "./user.controller";
 import requestValidation from "../../middlewares/requestValidation";
 import { userValidation } from "./user.validation";
 import { auth } from "../../middlewares/auth";
+import { multerConfig } from "../../middlewares/multer";
 const router = express.Router();
 
 router.post(
@@ -12,5 +13,6 @@ router.post(
 );
 
 router.get("/profile", auth, userController.profile);
+router.put("/updeted", multerConfig("image"), auth, userController.updateProfile);
 
 export const userRoutes = router;

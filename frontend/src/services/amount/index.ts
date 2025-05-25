@@ -123,7 +123,7 @@ export const getixDeposit = async () => {
   return response;
 };
 
-export const clientFixDeposit = async (id:string) =>{
+export const clientFixDeposit = async (id: string) => {
   const token = (await cookies()).get("token")?.value;
 
   const res = await fetch(
@@ -142,4 +142,40 @@ export const clientFixDeposit = async (id:string) =>{
 
   const response = await res.json();
   return response;
-}
+};
+
+export const createATMCard = async (data: FieldValues) => {
+  const token = (await cookies()).get("token")?.value;
+
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/atm/add-new`, {
+    method: "POST",
+    body: JSON.stringify(data),
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  revalidateTag("account");
+
+  const response = await res.json();
+  return response;
+};
+
+export const getATMCard = async () => {
+  const token = (await cookies()).get("token")?.value;
+
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/atm`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    next: {
+      tags: ["account"],
+    },
+  });
+
+  const response = await res.json();
+  return response;
+};

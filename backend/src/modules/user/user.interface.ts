@@ -6,5 +6,7 @@ export interface IUser {
   email: string;
   password: string;
   accountType?: "saving" | "current";
-  balance?: number;
+  image?: string;
+  address?: string;
+  phone?: string;
 }

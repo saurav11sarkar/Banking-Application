@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { IAtmCard } from "./atmCard.interface";
 
-const amtCardSchema = new mongoose.Schema<IAtmCard>(
+const atmCardSchema = new mongoose.Schema<IAtmCard>(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
@@ -13,12 +13,8 @@ const amtCardSchema = new mongoose.Schema<IAtmCard>(
       ref: "Account",
       required: true,
     },
-    data: {
-      type: Date,
-      default: Date.now,
-    },
     cardNumber: {
-      type: Number,
+      type: String,
       required: true,
       unique: true,
     },
@@ -35,14 +31,13 @@ const amtCardSchema = new mongoose.Schema<IAtmCard>(
       enum: ["basic", "classic", "platinum"],
       default: "basic",
     },
-    expiryDate:{
+    expiryDate: {
       type: Date,
       required: true,
-    }
+    },
   },
   { timestamps: true }
 );
 
-const AtmCard = mongoose.model<IAtmCard>("AtmCard", amtCardSchema);
-
+const AtmCard = mongoose.model<IAtmCard>("AtmCard", atmCardSchema);
 export default AtmCard;

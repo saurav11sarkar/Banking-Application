@@ -21,13 +21,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { createFixDeposit, getAccountNumber } from "@/services/amount";
 import { toast } from "sonner";
 
@@ -118,7 +111,9 @@ const AddFixDeposit = () => {
                         {...field}
                         value={
                           accountNumber
-                            ? `${accountNumber._id} - ₹${accountNumber.total_balance.toFixed(2)}/-`
+                            ? `${
+                                accountNumber._id
+                              } - ₹${accountNumber.total_balance.toFixed(2)}/-`
                             : ""
                         }
                         disabled

@@ -1,3 +1,4 @@
+import AppError from "../../errors/appError";
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import { IUser } from "./user.interface";
@@ -13,7 +14,18 @@ const profile = catchAsync(async (req, res) => {
   sendResponse(res, 200, "User profile retrieved successfully", result);
 });
 
+const updateProfile = catchAsync(async (req, res) => {
+  const file = req.file as Express.Multer.File;
+  if (!file) {
+    throw new AppError(400, "Please upload a file");
+  }
+  const formData = JSON.parse(req.body.data);
+  const result = await userService.updateProfile(formData, file, req.user?._id);
+  sendResponse(res, 200, "User profile updated successfully", result);
+});
+
 export const userController = {
   register,
   profile,
+  updateProfile,
 };
