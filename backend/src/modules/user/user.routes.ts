@@ -13,6 +13,6 @@ router.post(
 );
 
 router.get("/profile", auth, userController.profile);
-router.put("/updeted", multerConfig("image"), auth, userController.updateProfile);
+router.patch("/updeted", multerConfig("image"), auth, userController.updateProfile);
 
 export const userRoutes = router;

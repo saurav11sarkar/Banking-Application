@@ -15,14 +15,13 @@ const profile = catchAsync(async (req, res) => {
 });
 
 const updateProfile = catchAsync(async (req, res) => {
-  const file = req.file as Express.Multer.File;
-  if (!file) {
-    throw new AppError(400, "Please upload a file");
-  }
+  const file = req.file as Express.Multer.File | undefined;
   const formData = JSON.parse(req.body.data);
+
   const result = await userService.updateProfile(formData, file, req.user?._id);
   sendResponse(res, 200, "User profile updated successfully", result);
 });
+
 
 export const userController = {
   register,

@@ -31,7 +31,7 @@ const profile = async (payload: IUser) => {
 
 const updateProfile = async (
   payload: Partial<IUser>,
-  file: Express.Multer.File,
+  file: Express.Multer.File | undefined,
   userId: string
 ) => {
   const user = await User.findById(userId);
@@ -39,17 +39,24 @@ const updateProfile = async (
     throw new AppError(404, "User not found");
   }
 
-  const img = await uploadImage(file);
+  let imageUrl = user.image;
+
+  if (file) {
+    imageUrl = (await uploadImage(file)) as string;
+  }
+
   const result = await User.findByIdAndUpdate(
     userId,
     {
       ...payload,
-      image: img,
+      image: imageUrl,
     },
     { new: true }
-  );
+  ).select("-password");
+
   return result;
 };
+
 
 export const userService = {
   register,

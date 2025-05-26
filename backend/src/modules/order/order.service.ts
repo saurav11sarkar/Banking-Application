@@ -146,7 +146,7 @@ const successOrder = async (tran_id: string): Promise<string> => {
       );
     } else {
       const transactionIds = account.all_transaction_id.includes(
-        order.tranjectionId
+        order.tranjectionId as any
       )
         ? account.all_transaction_id
         : [...account.all_transaction_id, order.tranjectionId];

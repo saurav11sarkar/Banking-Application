@@ -4,4 +4,8 @@ export interface IUser {
   email: string;
   accountType: string;
   image?: string;
+  phone?:string;
+  address?:string;
+  createdAt: string;
+  updatedAt: string;
 }

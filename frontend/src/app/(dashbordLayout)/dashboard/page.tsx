@@ -9,6 +9,7 @@ const Dashboard = async () => {
   const res = await getixDeposit();
   const atm = await getATMCard();
 
+
   const dashboardData: IDashboardData[] = [
     {
       title: "Amount",
@@ -25,7 +26,7 @@ const Dashboard = async () => {
     {
       title: "ATM Card",
       icon: <IdCard className="w-6 h-6 text-indigo-500" />,
-      value: atm ? 1 : 0,
+      value: atm && atm.success === true ? 1 : 0,
       link: "/atm-card",
     },
   ];
