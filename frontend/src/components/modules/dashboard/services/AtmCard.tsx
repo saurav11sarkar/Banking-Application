@@ -21,7 +21,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Eye, EyeOff } from "lucide-react";
 import AtmCardModel from "./AtmCardModel";
-import { createATMCard, getAccountNumber, getATMCard } from "@/services/amount";
+import { createATMCard, getAccountNumber } from "@/services/amount";
 import { toast } from "sonner";
 
 interface IsetAccountNumber {

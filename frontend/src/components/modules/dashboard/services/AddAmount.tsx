@@ -19,7 +19,6 @@ const AddAmount = () => {
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors, isValid, isDirty, isSubmitting },
   } = useForm({ mode: "onChange" });
 

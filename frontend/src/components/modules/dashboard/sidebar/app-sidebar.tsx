@@ -1,9 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { Banknote, Bot, Settings2, SquareTerminal } from "lucide-react";
+import { Banknote, Settings2, SquareTerminal } from "lucide-react";
 
-// import { NavProjects } from "@/components/modules/dashboard/nav-projects"
 
 import {
   Sidebar,

@@ -2,11 +2,11 @@
 
 import React, { useEffect, useState } from "react";
 import {
-  ColumnDef,
   flexRender,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+
 import {
   Table,
   TableBody,
@@ -15,54 +15,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
+import { transactionColumns, Payment } from "@/components/columns/Transaction-columns";
 import { allOrdersTransaction } from "@/services/amount";
 import UserName from "@/components/reuseable/UserName";
 
-export type Payment = {
-  id: string;
-  date: string;
-  name?: string;
-  email: string;
-  transaction_id: string;
-  amount: number;
-  source: "order" | "claimed" | "unclaimed";
-};
 
-export const columns: ColumnDef<Payment>[] = [
-  {
-    accessorKey: "date",
-    header: "Date & Time",
-    cell: ({ row }) => (
-      <span className="text-sm text-gray-700">{row.getValue("date")}</span>
-    ),
-  },
-  {
-    accessorKey: "email",
-    header: "Email",
-    cell: ({ row }) => (
-      <span className="text-sm text-gray-600">{row.getValue("email")}</span>
-    ),
-  },
-  {
-    accessorKey: "transaction_id",
-    header: "Transaction ID",
-    cell: ({ row }) => (
-      <span className="text-xs font-mono text-blue-600 break-all">
-        {row.getValue("transaction_id")}
-      </span>
-    ),
-  },
-  {
-    accessorKey: "amount",
-    header: "Amount (₹)",
-    cell: ({ row }) => (
-      <span className="text-sm font-semibold text-green-700">
-        ₹{row.getValue("amount")}
-      </span>
-    ),
-  },
-];
 
 const TransactionPage = () => {
   const [data, setData] = useState<Payment[]>([]);
@@ -88,41 +45,37 @@ const TransactionPage = () => {
           source: "order",
         }));
 
-        const claimed: Payment[] = response?.data?.fixDeposits?.claimed.map(
-          (deposit: any) => ({
-            id: deposit._id,
-            email: deposit.user?.email || "N/A",
-            transaction_id: deposit?._id,
-            amount: deposit?.amount,
-            date: new Date(deposit?.createdAt).toLocaleString("en-GB", {
-              day: "2-digit",
-              month: "2-digit",
-              year: "numeric",
-              hour: "2-digit",
-              minute: "2-digit",
-              hour12: true,
-            }),
-            source: "claimed",
-          })
-        );
+        const claimed: Payment[] = response?.data?.fixDeposits?.claimed.map((deposit: any) => ({
+          id: deposit._id,
+          email: deposit.user?.email || "N/A",
+          transaction_id: deposit?._id,
+          amount: deposit?.amount,
+          date: new Date(deposit?.createdAt).toLocaleString("en-GB", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
+          }),
+          source: "claimed",
+        }));
 
-        const unclaimed: Payment[] = response?.data?.fixDeposits?.unclaimed.map(
-          (deposit: any) => ({
-            id: deposit._id,
-            email: deposit.user?.email || "N/A",
-            transaction_id: deposit?._id,
-            amount: deposit?.amount,
-            date: new Date(deposit?.createdAt).toLocaleString("en-GB", {
-              day: "2-digit",
-              month: "2-digit",
-              year: "numeric",
-              hour: "2-digit",
-              minute: "2-digit",
-              hour12: true,
-            }),
-            source: "unclaimed",
-          })
-        );
+        const unclaimed: Payment[] = response?.data?.fixDeposits?.unclaimed.map((deposit: any) => ({
+          id: deposit._id,
+          email: deposit.user?.email || "N/A",
+          transaction_id: deposit?._id,
+          amount: deposit?.amount,
+          date: new Date(deposit?.createdAt).toLocaleString("en-GB", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
+          }),
+          source: "unclaimed",
+        }));
 
         setData([...orders, ...claimed, ...unclaimed]);
       } catch (error) {
@@ -135,7 +88,7 @@ const TransactionPage = () => {
 
   const table = useReactTable({
     data,
-    columns,
+    columns: transactionColumns,
     getCoreRowModel: getCoreRowModel(),
   });
 
@@ -225,7 +178,7 @@ const TransactionPage = () => {
               ) : (
                 <TableRow>
                   <TableCell
-                    colSpan={columns.length}
+                    colSpan={transactionColumns.length}
                     className="h-24 text-center text-gray-500"
                   >
                     No transactions found.

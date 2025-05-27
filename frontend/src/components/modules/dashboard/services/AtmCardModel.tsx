@@ -1,8 +1,9 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import { getATMCard } from "@/services/amount";
-import { IATMCard } from "@/types";
+import { IATMCard } from "@/types/atm";
+
 
 interface Props {
   cardLoader: boolean;
@@ -12,28 +13,28 @@ interface Props {
 const AtmCardModel = ({ cardLoader, setCardLoader }: Props) => {
   const [getAtm, setGetAtm] = useState<IATMCard | null>(null);
 
-  const handleGetAtmCard = async () => {
-    try {
-      const response = await getATMCard();
-      setGetAtm(response?.data || null);
-    } catch (error) {
-      console.error("Failed to fetch ATM card data", error);
-      setGetAtm(null);
-    } finally {
-      setCardLoader(false); // Ensure loading ends
-    }
-  };
+  const handleGetAtmCard = useCallback(async () => {
+  try {
+    const response = await getATMCard();
+    setGetAtm(response?.data || null);
+  } catch (error) {
+    console.error("Failed to fetch ATM card data", error);
+    setGetAtm(null);
+  } finally {
+    setCardLoader(false);
+  }
+}, [setCardLoader]);
 
-  // Fetch on mount and when cardLoader is true (e.g., after new card is created)
-  useEffect(() => {
+useEffect(() => {
+  handleGetAtmCard();
+}, [handleGetAtmCard]);
+
+useEffect(() => {
+  if (cardLoader) {
     handleGetAtmCard();
-  }, []);
+  }
+}, [cardLoader, handleGetAtmCard]);
 
-  useEffect(() => {
-    if (cardLoader) {
-      handleGetAtmCard();
-    }
-  }, [cardLoader]);
 
   // Format card number
   const formatCardNumber = (number: string | undefined) =>
