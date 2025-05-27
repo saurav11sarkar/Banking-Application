@@ -3,9 +3,10 @@ import React from "react";
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div>
+    <div className="min-h-screen flex flex-col bg-gray-50">
       <Navbar />
-      {children}
+      {/* Padding top to offset the fixed navbar height */}
+      <main className="flex-grow pt-20 px-4 sm:px-6 lg:px-8">{children}</main>
     </div>
   );
 };

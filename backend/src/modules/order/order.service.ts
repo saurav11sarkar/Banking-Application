@@ -3,7 +3,7 @@ import config from "../../config";
 import { ObjectId } from "mongodb";
 
 import User from "../user/user.model";
-import { IOrder } from "./order.interface";
+// import { IOrder } from "./order.interface";
 import Order from "./order.model";
 import AppError from "../../errors/appError";
 import mongoose from "mongoose";
