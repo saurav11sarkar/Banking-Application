@@ -48,8 +48,8 @@ const addAmount = async (
       total_amount: amount,
       currency,
       tran_id,
-      success_url: `http://localhost:5000/api/v1/order/success/${tran_id}`,
-      fail_url: `http://localhost:5000/api/v1/order/fail/${tran_id}`,
+      success_url: `https://banking-server-sigma.vercel.app/api/v1/order/success/${tran_id}`,
+      fail_url: `https://banking-server-sigma.vercel.app/api/v1/order/fail/${tran_id}`,
       cancel_url: "http://localhost:3030/cancel",
       ipn_url: "http://localhost:3030/ipn",
       shipping_method: "Courier",
@@ -170,7 +170,7 @@ const successOrder = async (tran_id: string): Promise<string> => {
     if (result.modifiedCount > 0) {
       await session.commitTransaction();
       await session.endSession();
-      return `http://localhost:3000/success/${tran_id}?status=paid`;
+      return `https://banking-clients.vercel.app/success/${tran_id}?status=paid`;
     } else {
       await session.abortTransaction();
       await session.endSession();
@@ -195,7 +195,7 @@ const failOrder = async (tran_id: string): Promise<string> => {
   const result = await Order.deleteOne({ tranjectionId: tran_id });
 
   if (result.deletedCount > 0) {
-    return `http://localhost:3000/fail/${tran_id}?status=failed`;
+    return `https://banking-clients.vercel.app/fail/${tran_id}?status=failed`;
   } else {
     throw new AppError(500, "Failed to delete transaction.");
   }

@@ -1,0 +1,456 @@
+{
+	"info": {
+		"_postman_id": "68ec9ee0-3df4-4364-86ed-80e311d13ba7",
+		"name": "Banking Application",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38675905"
+	},
+	"item": [
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"user2\",\r\n    \"email\":\"user2@gmail.com\",\r\n    \"password\":\"123456\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/user/register",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"user",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update profile",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "data",
+									"value": "{\n    \"name\":\"user2\",\n    \"email\":\"user2@gmail.com\"\n}",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "postman-cloud:///1efae7c6-e2c7-4600-a430-d0cdc53de047"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{URL}}/user/updeted",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"user",
+								"updeted"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "order",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"12\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/order",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"order"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "profile",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjIyNjk5MTQ3YmNhZGY2N2I3ZTViOSIsImVtYWlsIjoic2Fya2FyQGdtYWlsLmNvbSIsIm5hbWUiOiJzYXVyYXYiLCJhY2NvdW50VHlwZSI6ImN1cnJlbnQiLCJpYXQiOjE3NDc2MzE3MzgsImV4cCI6MTc0NzcxODEzOH0.8q9akKTPH3eDn9GQP1WDBUoYzcvHfhhDoZpQob0EmA0",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/user/profile",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"user",
+								"profile"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "login",
+					"request": {
+						"auth": {
+							"type": "bearer"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"sarkar@gmail.com\",\r\n    \"password\":\"123456\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/auth/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "order",
+			"item": [
+				{
+					"name": "add amount",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjIyNjk5MTQ3YmNhZGY2N2I3ZTViOSIsImVtYWlsIjoic2Fya2FyQGdtYWlsLmNvbSIsIm5hbWUiOiJzYXVyYXYiLCJhY2NvdW50VHlwZSI6ImN1cnJlbnQiLCJpYXQiOjE3NDc2MzE3MzgsImV4cCI6MTc0NzcxODEzOH0.8q9akKTPH3eDn9GQP1WDBUoYzcvHfhhDoZpQob0EmA0",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"amount\": 123\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/order/addAmount",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"order",
+								"addAmount"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/v1/order/success/682ad88ecf847ac33e051411",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"order",
+								"success",
+								"682ad88ecf847ac33e051411"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "account",
+			"item": [
+				{
+					"name": "getaccount",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/account",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"account"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "all-order-tainstion",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/account/all-orders",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"account",
+								"all-orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get -account number",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/account/account-number",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"account",
+								"account-number"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "fix-deposit",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"account\":\"682e2baefd65f3ea93538d47\",\r\n    \"apply_for\":\"saurav sarkar\",\r\n    \"amount\": 500\r\n    // \"duration\": 10\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/fix-deposit/create",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"fix-deposit",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all fix deposit",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/fix-deposit/",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"fix-deposit",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get the client",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/fix-deposit/682f7f99bd742c9b7cda1d57",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"fix-deposit",
+								"682f7f99bd742c9b7cda1d57"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "atm-card",
+			"item": [
+				{
+					"name": "add card",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"account\": \"683010321e115daab058b2a2\",\r\n    \"cardType\": \"basic\",\r\n    \"pin\": 1234\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/atm/add-new",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"atm",
+								"add-new"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get Atm card",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/atm/",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"atm",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

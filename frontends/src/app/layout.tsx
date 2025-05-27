@@ -4,7 +4,7 @@ import "./globals.css";
 // import MainLayout from "@/layout/MainLayout";
 import { Toaster } from "sonner";
 import Provider from "@/provider/Provider";
-import ReduxProvider from "@/provider/ReduxProvider";
+// import ReduxProvider from "@/provider/ReduxProvider";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -24,7 +24,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ReduxProvider>
+    // <ReduxProvider>
       <Provider>
       <html lang="en" suppressHydrationWarning>
         <body className={`${poppins.className}`} suppressHydrationWarning>
@@ -33,6 +33,6 @@ export default function RootLayout({
         </body>
       </html>
     </Provider>
-    </ReduxProvider>
+    // </ReduxProvider>
   );
 }
