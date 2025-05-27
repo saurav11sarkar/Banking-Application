@@ -36,7 +36,7 @@ const Loginform = () => {
       const res = await login(data);
       if (res.success) {
         toast.success(res.message);
-        router.push("/");
+        router.push("/dashboard"); // Changed redirection to /dashboard
         router.refresh();
         setIsLoading(false);
       } else {
