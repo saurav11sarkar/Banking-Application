@@ -1,5 +1,3 @@
----
-
 ### 🌟 Welcome to Modern Banking, Reimagined! 🌟
 
 🚀 **Experience seamless, secure, and smart banking — anytime, anywhere.**
@@ -12,5 +10,3 @@
 * **GitHub Repository**: [github.com/saurav11sarkar/Banking-Application](https://github.com/saurav11sarkar/Banking-Application.git)
 
 🔒 Trusted | ⚙️ Fast | 📱 User-Friendly | 👨‍💻 Open Source
-
----
